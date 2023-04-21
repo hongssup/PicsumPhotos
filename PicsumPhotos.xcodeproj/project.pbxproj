@@ -17,6 +17,8 @@
 		3603E3F829F1A4B00049D7F9 /* PicsumPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E3F729F1A4B00049D7F9 /* PicsumPhotosTests.swift */; };
 		3603E40229F1A4B00049D7F9 /* PicsumPhotosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E40129F1A4B00049D7F9 /* PicsumPhotosUITests.swift */; };
 		3603E40429F1A4B00049D7F9 /* PicsumPhotosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E40329F1A4B00049D7F9 /* PicsumPhotosUITestsLaunchTests.swift */; };
+		3603E41229F1A5A40049D7F9 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3603E41129F1A5A40049D7F9 /* SnapKit */; };
+		3603E41429F1A6040049D7F9 /* ImageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E41329F1A6040049D7F9 /* ImageListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,7 @@
 		3603E3FD29F1A4B00049D7F9 /* PicsumPhotosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PicsumPhotosUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3603E40129F1A4B00049D7F9 /* PicsumPhotosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicsumPhotosUITests.swift; sourceTree = "<group>"; };
 		3603E40329F1A4B00049D7F9 /* PicsumPhotosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicsumPhotosUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3603E41329F1A6040049D7F9 /* ImageListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3603E41229F1A5A40049D7F9 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +113,7 @@
 				3603E3EB29F1A4B00049D7F9 /* LaunchScreen.storyboard */,
 				3603E3EE29F1A4B00049D7F9 /* Info.plist */,
 				3603E3E629F1A4AE0049D7F9 /* PicsumPhotos.xcdatamodeld */,
+				3603E41329F1A6040049D7F9 /* ImageListViewController.swift */,
 			);
 			path = PicsumPhotos;
 			sourceTree = "<group>";
@@ -146,6 +151,9 @@
 			dependencies = (
 			);
 			name = PicsumPhotos;
+			packageProductDependencies = (
+				3603E41129F1A5A40049D7F9 /* SnapKit */,
+			);
 			productName = PicsumPhotos;
 			productReference = 3603E3DA29F1A4AE0049D7F9 /* PicsumPhotos.app */;
 			productType = "com.apple.product-type.application";
@@ -218,6 +226,9 @@
 				Base,
 			);
 			mainGroup = 3603E3D129F1A4AE0049D7F9;
+			packageReferences = (
+				3603E41029F1A5A40049D7F9 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 3603E3DB29F1A4AE0049D7F9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -261,6 +272,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3603E41429F1A6040049D7F9 /* ImageListViewController.swift in Sources */,
 				3603E3E229F1A4AE0049D7F9 /* ViewController.swift in Sources */,
 				3603E3DE29F1A4AE0049D7F9 /* AppDelegate.swift in Sources */,
 				3603E3E029F1A4AE0049D7F9 /* SceneDelegate.swift in Sources */,
@@ -370,7 +382,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -424,7 +436,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -449,6 +461,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -477,6 +490,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -606,6 +620,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3603E41029F1A5A40049D7F9 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3603E41129F1A5A40049D7F9 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3603E41029F1A5A40049D7F9 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		3603E3E629F1A4AE0049D7F9 /* PicsumPhotos.xcdatamodeld */ = {
