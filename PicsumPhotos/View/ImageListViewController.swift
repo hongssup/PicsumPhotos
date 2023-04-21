@@ -14,25 +14,32 @@ class ImageListViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 2
         layout.minimumInteritemSpacing = 1
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        //view.backgroundColor = .blue
-        view.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        view.delegate = self
-        view.dataSource = self
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.delegate = self
+        collectionView.dataSource = self
         
-        return view
+        return collectionView
     }()
+    
+    lazy var images: [Image] = [] {
+        didSet {
+            imageListCollectionView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .white
         title = "ImageList"
         setupCollectionView()
+        
+        getImages()
     }
     
-    func setupCollectionView() {
+    private func setupCollectionView() {
         view.addSubview(imageListCollectionView)
         
         let safeArea = view.safeAreaLayoutGuide
@@ -40,16 +47,35 @@ class ImageListViewController: UIViewController {
             $0.edges.equalTo(safeArea)
         }
     }
+    
+    private func getImages() {
+        Task {
+            do {
+                self.images = try await APIManager.shared.fetchImageList()
+                print(self.images)
+            } catch {
+                debugPrint("error")
+            }
+        }
+    }
 }
 
 extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 30
+        return images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .lightGray
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? ImageCollectionViewCell else { return UICollectionViewCell() }
+        //cell.backgroundColor = .lightGray
+        let urlStr = images[indexPath.item].downloadUrl
+        Task {
+            do {
+                cell.thumbnail.image = try await APIManager.shared.fetchImage(url: urlStr)
+            } catch {
+                debugPrint("error")
+            }
+        }
         return cell
     }
 }
