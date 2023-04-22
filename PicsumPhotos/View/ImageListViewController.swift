@@ -54,7 +54,7 @@ class ImageListViewController: UIViewController {
                 self.images = try await APIManager.shared.fetchImageList()
                 print(self.images)
             } catch {
-                debugPrint("error")
+                debugPrint("getImages error")
             }
         }
     }
@@ -71,9 +71,9 @@ extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDat
         let urlStr = images[indexPath.item].downloadUrl
         Task {
             do {
-                cell.thumbnail.image = try await APIManager.shared.fetchImage(url: urlStr)
+                cell.thumbnail.image = try await ImageCacheManager.shared.imageCache(url: urlStr)
             } catch {
-                debugPrint("error")
+                debugPrint("collectionView error")
             }
         }
         return cell

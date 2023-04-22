@@ -23,6 +23,7 @@
 		3603E41A29F2A9F60049D7F9 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E41929F2A9F50049D7F9 /* APIManager.swift */; };
 		3603E41D29F2AC6B0049D7F9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E41C29F2AC6B0049D7F9 /* Image.swift */; };
 		3603E41F29F2DEAD0049D7F9 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E41E29F2DEAD0049D7F9 /* ImageCollectionViewCell.swift */; };
+		3603E42229F36ADF0049D7F9 /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E42129F36ADE0049D7F9 /* ImageCacheManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		3603E41929F2A9F50049D7F9 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		3603E41C29F2AC6B0049D7F9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		3603E41E29F2DEAD0049D7F9 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		3603E42129F36ADE0049D7F9 /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				3603E41929F2A9F50049D7F9 /* APIManager.swift */,
+				3603E42129F36ADE0049D7F9 /* ImageCacheManager.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 			files = (
 				3603E41429F1A6040049D7F9 /* ImageListViewController.swift in Sources */,
 				3603E41D29F2AC6B0049D7F9 /* Image.swift in Sources */,
+				3603E42229F36ADF0049D7F9 /* ImageCacheManager.swift in Sources */,
 				3603E3E229F1A4AE0049D7F9 /* ViewController.swift in Sources */,
 				3603E3DE29F1A4AE0049D7F9 /* AppDelegate.swift in Sources */,
 				3603E3E029F1A4AE0049D7F9 /* SceneDelegate.swift in Sources */,

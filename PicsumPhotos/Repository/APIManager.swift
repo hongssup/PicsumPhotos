@@ -10,6 +10,7 @@ import UIKit
 
 final class APIManager {
     static let shared = APIManager()
+    private init() { }
     
     func fetchData(url: URL) async throws -> Data {
         let (data, response) = try await URLSession.shared.data(from: url)
@@ -28,8 +29,7 @@ final class APIManager {
         return imageList
     }
     
-    func fetchImage(url: String) async throws -> UIImage {
-        guard let url = URL(string: url) else { return UIImage() }
+    func fetchImage(url: URL) async throws -> UIImage {
         let request = URLRequest(url: url)
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
