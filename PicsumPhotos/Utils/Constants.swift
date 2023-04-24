@@ -11,5 +11,6 @@ import UIKit
 enum Constants {
     enum API {
         static let baseURL = "https://picsum.photos/v2/list"
+        static let imageURL = "https://picsum.photos/id/"
     }
 }

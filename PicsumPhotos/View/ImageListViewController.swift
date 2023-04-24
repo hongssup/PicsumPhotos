@@ -28,6 +28,8 @@ class ImageListViewController: UIViewController {
         }
     }
     
+    var page: Int = 2
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,12 +53,30 @@ class ImageListViewController: UIViewController {
     private func getImages() {
         Task {
             do {
-                self.images = try await APIManager.shared.fetchImageList()
-                print(self.images)
+                images = try await APIManager.shared.fetchImageList(query: [])
             } catch {
                 debugPrint("getImages error")
             }
         }
+    }
+    
+    private func loadMoreImages() {
+        Task {
+            do {
+                let list = try await APIManager.shared.fetchImageList(query: [URLQueryItem(name: "page", value: String(page)), URLQueryItem(name: "limit", value: "30")])
+                images.append(contentsOf: list)
+                page += 1
+            } catch {
+                debugPrint("loadMoreImages error")
+                //마지막페이지입니다.
+            }
+        }
+    }
+    
+    private func resizeHeight(newWidth: CGFloat, width: Int, height: Int) -> Int {
+        let scale = newWidth / CGFloat(width)
+        let newHeight = CGFloat(height) * scale
+        return Int(newHeight)
     }
 }
 
@@ -67,17 +87,31 @@ extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? ImageCollectionViewCell else { return UICollectionViewCell() }
-        //cell.backgroundColor = .lightGray
-        let urlStr = images[indexPath.item].downloadUrl
+        cell.thumbnail.image = nil
+        let item = images[indexPath.item]
+        let newWidth = 600
+        let newHeight = resizeHeight(newWidth: CGFloat(newWidth), width: item.width, height: item.height)
+        let id = item.id
+        //let urlStr = images[indexPath.item].downloadUrl
+        let urlStr = Constants.API.imageURL + id + "/\(newWidth)/\(newHeight)"
         Task {
             do {
-                cell.thumbnail.image = try await ImageCacheManager.shared.imageCache(url: urlStr)
+                //cell.thumbnail.image = try await ImageCacheManager.shared.imageCache(url: urlStr)
+                cell.thumbnail.image = try await ImageCacheManager.shared.getCachedImage(id: id, url: urlStr)
             } catch {
                 debugPrint("collectionView error")
             }
         }
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.item + 1 == images.count {
+            debugPrint("load more")
+            loadMoreImages()
+        }
+    }
+    
 }
 
 extension ImageListViewController: UICollectionViewDelegateFlowLayout {
