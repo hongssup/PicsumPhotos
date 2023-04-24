@@ -54,8 +54,10 @@ class ImageListViewController: UIViewController {
         Task {
             do {
                 images = try await APIManager.shared.fetchImageList(query: [])
-            } catch {
-                debugPrint("getImages error")
+            } catch APIError.invalidURL {
+                #if DEBUG
+                    debugPrint(APIError.invalidURL.description)
+                #endif
             }
         }
     }
@@ -64,11 +66,17 @@ class ImageListViewController: UIViewController {
         Task {
             do {
                 let list = try await APIManager.shared.fetchImageList(query: [URLQueryItem(name: "page", value: String(page)), URLQueryItem(name: "limit", value: "30")])
+                if list.isEmpty {
+                    let alert = UIAlertController(title: "마지막 페이지입니다.", message: "더 이상 호출할 페이지가 없습니다.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "확인", style: .default))
+                    present(alert, animated: true)
+                }
                 images.append(contentsOf: list)
                 page += 1
             } catch {
+                #if DEBUG
                 debugPrint("loadMoreImages error")
-                //마지막페이지입니다.
+                #endif
             }
         }
     }
@@ -98,8 +106,10 @@ extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDat
             do {
                 //cell.thumbnail.image = try await ImageCacheManager.shared.imageCache(url: urlStr)
                 cell.thumbnail.image = try await ImageCacheManager.shared.getCachedImage(id: id, url: urlStr)
-            } catch {
-                debugPrint("collectionView error")
+            } catch CacheError.invalidData {
+                #if DEBUG
+                debugPrint(CacheError.invalidData.description)
+                #endif
             }
         }
         return cell
@@ -107,11 +117,9 @@ extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.item + 1 == images.count {
-            debugPrint("load more")
             loadMoreImages()
         }
     }
-    
 }
 
 extension ImageListViewController: UICollectionViewDelegateFlowLayout {

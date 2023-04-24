@@ -8,6 +8,23 @@
 import Foundation
 import UIKit
 
+enum APIError: Error {
+    case invalidURL
+    case invalidResponse
+    case conversionFailure
+    
+    var description: String {
+        switch self {
+        case .invalidURL:
+            return "Invalid URL"
+        case .invalidResponse:
+            return "InvalidResponse"
+        case .conversionFailure:
+            return "ConversionFailure"
+        }
+    }
+}
+
 final class APIManager {
     static let shared = APIManager()
     private init() { }
@@ -16,7 +33,7 @@ final class APIManager {
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
-              (200...299).contains(statusCode) else { throw NSError(domain: "fetch error", code: 1004) }
+              (200...299).contains(statusCode) else { throw APIError.invalidResponse }
         return data
     }
     
@@ -24,7 +41,7 @@ final class APIManager {
         var components = URLComponents(string: Constants.API.baseURL)
         components?.queryItems = query
 
-        guard let url = components?.url else { throw NSError(domain: "invalid url", code: 1004) }
+        guard let url = components?.url else { throw APIError.invalidURL }
         let request = URLRequest(url: url)
         
         let data = try await APIManager.shared.fetchData(request: request)
@@ -37,8 +54,9 @@ final class APIManager {
         let request = URLRequest(url: url)
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
-              (200...299).contains(statusCode) else { throw NSError(domain: "fetch error", code: 1004) }
-        guard let image = UIImage(data: data) else { throw NSError(domain: "image coverting error", code: 999)}
+              (200...299).contains(statusCode) else { throw APIError.invalidResponse }
+        guard let image = UIImage(data: data) else { throw APIError.conversionFailure }
+        
         return image
     }
 }
