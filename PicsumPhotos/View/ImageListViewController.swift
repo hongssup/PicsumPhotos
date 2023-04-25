@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-class ImageListViewController: UIViewController {
+final class ImageListViewController: UIViewController {
     
-    lazy var imageListCollectionView: UICollectionView = {
+    private lazy var imageListCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 2.4
         layout.minimumInteritemSpacing = 1
@@ -22,14 +22,14 @@ class ImageListViewController: UIViewController {
         return collectionView
     }()
     
-    lazy var images: [Image] = [] {
+    private lazy var images: [Image] = [] {
         didSet {
             imageListCollectionView.reloadItems(at: imageListCollectionView.indexPathsForVisibleItems)
             //imageListCollectionView.reloadData()
         }
     }
     
-    var page: Int = 2
+    private var page: Int = 2
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,9 +67,12 @@ class ImageListViewController: UIViewController {
     private func loadMoreImages() {
         Task {
             do {
-                let list = try await APIManager.shared.fetchImageList(query: [URLQueryItem(name: "page", value: String(page)), URLQueryItem(name: "limit", value: "30")])
+                let list = try await APIManager.shared.fetchImageList(query: [URLQueryItem(name: "page", value: String(page)),
+                                                                              URLQueryItem(name: "limit", value: "30")])
                 if list.isEmpty {
-                    let alert = UIAlertController(title: "마지막 페이지입니다.", message: "더 이상 호출할 페이지가 없습니다.", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "마지막 페이지입니다.",
+                                                  message: "더 이상 호출할 페이지가 없습니다.",
+                                                  preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "확인", style: .default))
                     present(alert, animated: true)
                 }
@@ -82,12 +85,6 @@ class ImageListViewController: UIViewController {
             }
         }
     }
-    
-    private func resizeHeight(width: Int, height: Int) -> Int {
-        let scale = CGFloat(Constants.Value.newWidth) / CGFloat(width)
-        let newHeight = CGFloat(height) * scale
-        return Int(newHeight)
-    }
 }
 
 extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -98,22 +95,7 @@ extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? ImageCollectionViewCell else { return UICollectionViewCell() }
         cell.thumbnail.image = nil
-        let item = images[indexPath.item]
-        let newHeight = resizeHeight(width: item.width, height: item.height)
-        let id = item.id
-        //let urlStr = images[indexPath.item].downloadUrl
-        let urlStr = Constants.API.imageURL + id + "/\(Constants.Value.newWidth)/\(newHeight)"
-        
-        Task {
-            do {
-                //cell.thumbnail.image = try await ImageCacheManager.shared.imageCache(url: urlStr)
-                cell.thumbnail.image = try await ImageCacheManager.shared.getCachedImage(id: id, url: urlStr)
-            } catch CacheError.invalidURL {
-                #if DEBUG
-                debugPrint(CacheError.invalidURL.description)
-                #endif
-            }
-        }
+        cell.bind(model: images[indexPath.item])
         return cell
     }
     

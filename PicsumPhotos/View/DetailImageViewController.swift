@@ -7,37 +7,25 @@
 
 import UIKit
 
-class DetailImageViewController: UIViewController {
+final class DetailImageViewController: UIViewController {
     
-    lazy var imageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
         return view
     }()
     
-    lazy var authorLabel: UILabel = {
+    private lazy var authorLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .medium)
         return label
     }()
     
-    var ratio: CGFloat = 1
+    private var ratio: CGFloat?
     
     var imageInfo: Image? {
         didSet {
-            //print("imageInfo:\(imageInfo)")
-            title = imageInfo?.id
-            authorLabel.text = imageInfo?.author
-            ratio = CGFloat(imageInfo?.height ?? 1) / CGFloat(imageInfo?.width ?? 1)
-            Task {
-                do {
-                    imageView.image = try await ImageCacheManager.shared.getCachedImage(id: imageInfo!.id, url: imageInfo!.downloadUrl)
-                } catch CacheError.invalidData {
-                    #if DEBUG
-                    debugPrint(CacheError.invalidData.description)
-                    #endif
-                }
-            }
+            if let imageInfo { bind(imageInfo) }
         }
     }
     
@@ -58,12 +46,28 @@ class DetailImageViewController: UIViewController {
         
         imageView.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(safeArea)
-            $0.height.equalTo(imageView.snp.width).multipliedBy(ratio)
+            $0.height.equalTo(imageView.snp.width).multipliedBy(ratio ?? 1)
         }
         
         authorLabel.snp.makeConstraints {
             $0.top.equalTo(imageView.snp.bottom).offset(16)
             $0.leading.equalTo(safeArea).offset(20)
+        }
+    }
+    
+    private func bind(_ imageInfo: Image) {
+        title = imageInfo.id
+        authorLabel.text = imageInfo.author
+        ratio = CGFloat(imageInfo.height) / CGFloat(imageInfo.width)
+        
+        Task {
+            do {
+                imageView.image = try await ImageCacheManager.shared.getCachedImage(id: imageInfo.id, url: imageInfo.downloadUrl)
+            } catch CacheError.invalidData {
+                #if DEBUG
+                debugPrint(CacheError.invalidData.description)
+                #endif
+            }
         }
     }
 }
