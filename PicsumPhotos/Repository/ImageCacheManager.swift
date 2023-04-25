@@ -63,7 +63,9 @@ actor ImageCacheManager {
         // 해당 디렉토리에 파일이 존재하면 캐시된 이미지를 불러오기
         guard let localURL else { throw CacheError.invalidLocalURL }
         if let cachedImage = UIImage(contentsOfFile: localURL.path) {
+            #if DEBUG
             debugPrint("get cachedImage \(id)")
+            #endif
             return cachedImage
         }
         // 이미지 다운로드 후 캐싱 처리
@@ -75,7 +77,9 @@ actor ImageCacheManager {
     }
     
     func cacheImage(image: UIImage, localURL: URL) async throws -> Data {
+        #if DEBUG
         debugPrint("cacheImage...")
+        #endif
         guard let data = image.jpegData(compressionQuality: 0.5) else { throw CacheError.invalidData }
         try data.write(to: localURL)
         

@@ -13,4 +13,8 @@ enum Constants {
         static let baseURL = "https://picsum.photos/v2/list"
         static let imageURL = "https://picsum.photos/id/"
     }
+    
+    enum Value {
+        static let newWidth = 600
+    }
 }

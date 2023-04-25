@@ -12,19 +12,20 @@ class ImageListViewController: UIViewController {
     
     lazy var imageListCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 2
+        layout.minimumLineSpacing = 2.4
         layout.minimumInteritemSpacing = 1
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.delegate = self
         collectionView.dataSource = self
-        
+        collectionView.backgroundColor = .white
         return collectionView
     }()
     
     lazy var images: [Image] = [] {
         didSet {
-            imageListCollectionView.reloadData()
+            imageListCollectionView.reloadItems(at: imageListCollectionView.indexPathsForVisibleItems)
+            //imageListCollectionView.reloadData()
         }
     }
     
@@ -33,8 +34,9 @@ class ImageListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        view.backgroundColor = .white
+        navigationItem.largeTitleDisplayMode = .always
+        navigationController?.navigationBar.prefersLargeTitles = true
+        view.backgroundColor = .systemBackground
         title = "ImageList"
         setupCollectionView()
         
@@ -81,8 +83,8 @@ class ImageListViewController: UIViewController {
         }
     }
     
-    private func resizeHeight(newWidth: CGFloat, width: Int, height: Int) -> Int {
-        let scale = newWidth / CGFloat(width)
+    private func resizeHeight(width: Int, height: Int) -> Int {
+        let scale = CGFloat(Constants.Value.newWidth) / CGFloat(width)
         let newHeight = CGFloat(height) * scale
         return Int(newHeight)
     }
@@ -97,18 +99,18 @@ extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDat
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? ImageCollectionViewCell else { return UICollectionViewCell() }
         cell.thumbnail.image = nil
         let item = images[indexPath.item]
-        let newWidth = 600
-        let newHeight = resizeHeight(newWidth: CGFloat(newWidth), width: item.width, height: item.height)
+        let newHeight = resizeHeight(width: item.width, height: item.height)
         let id = item.id
         //let urlStr = images[indexPath.item].downloadUrl
-        let urlStr = Constants.API.imageURL + id + "/\(newWidth)/\(newHeight)"
+        let urlStr = Constants.API.imageURL + id + "/\(Constants.Value.newWidth)/\(newHeight)"
+        
         Task {
             do {
                 //cell.thumbnail.image = try await ImageCacheManager.shared.imageCache(url: urlStr)
                 cell.thumbnail.image = try await ImageCacheManager.shared.getCachedImage(id: id, url: urlStr)
-            } catch CacheError.invalidData {
+            } catch CacheError.invalidURL {
                 #if DEBUG
-                debugPrint(CacheError.invalidData.description)
+                debugPrint(CacheError.invalidURL.description)
                 #endif
             }
         }
@@ -119,6 +121,12 @@ extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDat
         if indexPath.item + 1 == images.count {
             loadMoreImages()
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = DetailImageViewController()
+        vc.imageInfo = images[indexPath.item]
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

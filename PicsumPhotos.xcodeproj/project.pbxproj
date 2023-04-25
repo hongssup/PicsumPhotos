@@ -24,6 +24,7 @@
 		3603E41D29F2AC6B0049D7F9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E41C29F2AC6B0049D7F9 /* Image.swift */; };
 		3603E41F29F2DEAD0049D7F9 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E41E29F2DEAD0049D7F9 /* ImageCollectionViewCell.swift */; };
 		3603E42229F36ADF0049D7F9 /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E42129F36ADE0049D7F9 /* ImageCacheManager.swift */; };
+		3603E42829F76CBB0049D7F9 /* DetailImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603E42729F76CBB0049D7F9 /* DetailImageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		3603E41C29F2AC6B0049D7F9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		3603E41E29F2DEAD0049D7F9 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		3603E42129F36ADE0049D7F9 /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
+		3603E42729F76CBB0049D7F9 /* DetailImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +180,7 @@
 			children = (
 				3603E41329F1A6040049D7F9 /* ImageListViewController.swift */,
 				3603E41E29F2DEAD0049D7F9 /* ImageCollectionViewCell.swift */,
+				3603E42729F76CBB0049D7F9 /* DetailImageViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				3603E3E029F1A4AE0049D7F9 /* SceneDelegate.swift in Sources */,
 				3603E3E829F1A4AE0049D7F9 /* PicsumPhotos.xcdatamodeld in Sources */,
 				3603E41F29F2DEAD0049D7F9 /* ImageCollectionViewCell.swift in Sources */,
+				3603E42829F76CBB0049D7F9 /* DetailImageViewController.swift in Sources */,
 				3603E41729F2A9390049D7F9 /* Constants.swift in Sources */,
 				3603E41A29F2A9F60049D7F9 /* APIManager.swift in Sources */,
 			);
