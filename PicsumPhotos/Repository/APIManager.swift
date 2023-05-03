@@ -52,9 +52,8 @@ final class APIManager {
     
     func fetchImage(url: URL) async throws -> UIImage {
         let request = URLRequest(url: url)
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
-              (200...299).contains(statusCode) else { throw APIError.invalidResponse }
+        let data = try await APIManager.shared.fetchData(request: request)
+        
         guard let image = UIImage(data: data) else { throw APIError.conversionFailure }
         
         return image

@@ -37,12 +37,10 @@ final class ImageCollectionViewCell: UICollectionViewCell {
     
     func bind(model: Image) {
         let newHeight = resizeHeight(width: model.width, height: model.height)
-        //let urlStr = images[indexPath.item].downloadUrl
         let urlStr = Constants.API.imageURL + model.id + "/\(Constants.Value.newWidth)/\(newHeight)"
         
         Task {
             do {
-                //thumbnail.image = try await ImageCacheManager.shared.imageCache(url: urlStr)
                 thumbnail.image = try await ImageCacheManager.shared.getCachedImage(id: model.id, url: urlStr)
             } catch CacheError.invalidURL {
                 #if DEBUG
