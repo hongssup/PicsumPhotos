@@ -36,6 +36,7 @@ final class ImageCollectionViewCell: UICollectionViewCell {
     }
     
     func bind(model: Image) {
+        thumbnail.image = nil
         let newHeight = resizeHeight(width: model.width, height: model.height)
         let urlStr = Constants.API.imageURL + model.id + "/\(Constants.Value.newWidth)/\(newHeight)"
         

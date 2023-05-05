@@ -7,10 +7,12 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 enum APIError: Error {
     case invalidURL
     case invalidResponse
+    case decodingFailure
     case conversionFailure
     
     var description: String {
@@ -19,6 +21,8 @@ enum APIError: Error {
             return "Invalid URL"
         case .invalidResponse:
             return "InvalidResponse"
+        case .decodingFailure:
+            return "DecodingFailure"
         case .conversionFailure:
             return "ConversionFailure"
         }
@@ -37,17 +41,27 @@ final class APIManager {
         return data
     }
     
-    func fetchImageList(query: [URLQueryItem]) async throws -> [Image] {
-        var components = URLComponents(string: Constants.API.baseURL)
-        components?.queryItems = query
+    func fetchImageListRx(query: [URLQueryItem]) -> Observable<[Image]> {
+        return Observable.create { observer in
+            Task {
+                do {
+                    var components = URLComponents(string: Constants.API.baseURL)
+                    components?.queryItems = query
 
-        guard let url = components?.url else { throw APIError.invalidURL }
-        let request = URLRequest(url: url)
-        
-        let data = try await APIManager.shared.fetchData(request: request)
-        let imageList = try JSONDecoder().decode([Image].self, from: data)
-        
-        return imageList
+                    guard let url = components?.url else { throw APIError.invalidURL }
+                    let request = URLRequest(url: url)
+                    
+                    let data = try await APIManager.shared.fetchData(request: request)
+                    let imageList = try JSONDecoder().decode([Image].self, from: data)
+                    
+                    observer.onNext(imageList)
+                    observer.onCompleted()
+                } catch {
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
     }
     
     func fetchImage(url: URL) async throws -> UIImage {

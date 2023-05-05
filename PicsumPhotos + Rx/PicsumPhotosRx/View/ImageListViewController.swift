@@ -7,6 +7,8 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 final class ImageListViewController: UIViewController {
     
@@ -17,25 +19,21 @@ final class ImageListViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.delegate = self
-        collectionView.dataSource = self
         collectionView.backgroundColor = .white
         return collectionView
     }()
     
-    private lazy var images: [Image] = [] {
-        didSet {
-            imageListCollectionView.reloadItems(at: imageListCollectionView.indexPathsForVisibleItems)
-        }
-    }
-    
-    private var page: Int = 1
+    let disposeBag = DisposeBag()
+    let imageViewModel = ImageViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupView()
         setupCollectionView()
-        fetchImages()
+        
+        bindCollectionView()
+        imageViewModel.fetchImages()
     }
     
     private func setupView() {
@@ -54,55 +52,34 @@ final class ImageListViewController: UIViewController {
             $0.edges.equalTo(safeArea)
         }
     }
-    
-    private func fetchImages() {
-        Task {
-            do {
-                let query = [URLQueryItem(name: "page", value: String(page)),
-                             URLQueryItem(name: "limit", value: "30")]
-                let list = try await APIManager.shared.fetchImageList(query: query)
-                if list.isEmpty {
-                    let alert = UIAlertController(title: "마지막 페이지입니다.",
-                                                  message: "더 이상 호출할 페이지가 없습니다.",
-                                                  preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "확인", style: .default))
-                    present(alert, animated: true)
-                    return
-                }
-                images.append(contentsOf: list)
-                page += 1
-            } catch APIError.invalidURL{
-                #if DEBUG
-                debugPrint(APIError.invalidURL.description)
-                #endif
-            }
-        }
-    }
 }
 
-extension ImageListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return images.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? ImageCollectionViewCell else { return UICollectionViewCell() }
-        cell.thumbnail.image = nil
-        cell.bind(model: images[indexPath.item])
+extension ImageListViewController {
+    func bindCollectionView() {
+        imageViewModel.imageList.asObservable()
+            .bind(to: imageListCollectionView.rx
+                .items(cellIdentifier: "cell", cellType: ImageCollectionViewCell.self))
+        { index, element, cell in
+            cell.bind(model: element)
+        }.disposed(by: disposeBag)
         
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.item + 1 == images.count {
-            fetchImages()
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = DetailImageViewController()
-        vc.imageInfo = images[indexPath.item]
-        navigationController?.pushViewController(vc, animated: true)
+        imageListCollectionView.rx.modelSelected(Image.self).subscribe { model in
+            let vc = DetailImageViewController()
+            vc.imageInfo = model
+            self.navigationController?.pushViewController(vc, animated: true)
+        }.disposed(by: disposeBag)
+        
+        imageListCollectionView.rx.didScroll.subscribe { [weak self] _ in
+            guard let self = self else { return }
+            let offSetY = self.imageListCollectionView.contentOffset.y
+            let contentHeight = self.imageListCollectionView.contentSize.height
+            
+            if contentHeight == 0 { return }
+            
+            if offSetY > (contentHeight - self.imageListCollectionView.frame.size.height - 100) {
+                self.imageViewModel.fetchImages()
+            }
+        }.disposed(by: disposeBag)
     }
 }
 

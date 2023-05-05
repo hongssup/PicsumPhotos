@@ -542,7 +542,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QAT46LHJF5;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PicsumPhotos/Info.plist;
+				INFOPLIST_FILE = PicsumPhotosRx/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -571,7 +571,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QAT46LHJF5;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PicsumPhotos/Info.plist;
+				INFOPLIST_FILE = PicsumPhotosRx/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
